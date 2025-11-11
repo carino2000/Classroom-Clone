@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.classroom.mapper.VerificationMapper">
+
+    <insert id="insertOne" parameterType="Verification">
+        insert into verification(member_id, code, expired_at)
+        values (#{memberId}, #{code}, #{expiredAt})
+    </insert>
+
+    <select id="selectLatestByMemberId" parameterType="String" resultType="Verification">
+        select * from verification where member_id=#{memberId} order by expired_at desc limit 1
+    </select>
+
+</mapper>
