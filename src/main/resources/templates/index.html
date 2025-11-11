@@ -3,14 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>index</title>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
-<h1 class="text-3xl">Classroom Index Test!</h1>
+<header class="flex justify-between px-3 py-2 items-center border-b border-b-slate-400">
+    <div>
+        <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="w-40 hover:scale-110 duration-100">
+    </div>
+    <div>
+        <button class="flex px-4 py-2 border border-ston-400 text-stone-600 rounded cursor-pointer item-center space-x-1
+        hover:bg-blue-300 hover:border-blue-500 hover:text-white duration-200">
+            <i class="fi fi-rr-user"></i>
+            <span>로그인</span>
+        </button>
+    </div>
+</header>
+<main class="mt-4">
+    <section class="w-3xl mt-20 mx-auto text-center">
+        <p class="text-xl"><i class="fi fi-sr-home"></i> Google Classroom</p>
+        <h1 class="text-5xl font-bold mt-2 text-black">교육과 학습이 하나가 되는 곳</h1>
+        <p class="mt-6 leading-8">
+            클래스룸을 사용하면 교육자가 맞춤설정, 관리, 측정이 가능한 흥미로운 학습 경험을 조성할 수 있습니다.
+            교육자가 교육 효과를 확대하고 학생의 미래 대비 역량을 강화하도록 도와줍니다.
+        </p>
+        <div class="mt-6 flex justify-center">
+            <button class="px-5 py-2 border border-slate-300 text-blue-500 font-extrabold rounded-3xl
+            hover:border-blue-500 hover:bg-gray-100 cursor-pointer duration-300">클래스 룸 로그인하기</button>
+        </div>
+    </section>
+    <section class="max-w-3xl mx-auto mt-20 flex justify-center">
+        <div class="max-w-3xl px-10 shadow rounded-3xl">
+            <ul class="flex space-x-5 font-bord text-base">
+                <li class="hover:bg-blue-100 hover:text-blue-500 cursor-point py-4 px-2 duration-300">학생 맞춤 설정</li>
+                <li class="hover:bg-blue-100 hover:text-blue-500 cursor-point py-4 px-2 duration-300">일상 업무 간소화</li>
+                <li class="hover:bg-blue-100 hover:text-blue-500 cursor-point py-4 px-2 duration-300">유용한 정보 및 가시성 확보</li>
+            </ul>
+        </div>
+    </section>
+</main>
 
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse, voluptatem!
-</p>
 
 </body>
 </html>
