@@ -18,24 +18,24 @@ import java.time.LocalDate;
 public class SignupController {
     final MemberMapper memberMapper;
 
-    @GetMapping("/step/1")
+    @GetMapping("/step/account")
     public String signupStep1GetHandler() {
-        return "signup/step-1";
+        return "signup/account";
     }
 
-    @PostMapping("/step/1")
+    @PostMapping("/step/account")
     public String signupStep1PostHandler(@ModelAttribute AccountCreationRequest acr, HttpSession session) {
         Member temporalMember = new Member(acr.id(), acr.pw(), acr.email());
         session.setAttribute("temporalMember", temporalMember);
-        return "redirect:/signup/step/2";
+        return "redirect:/signup/step/profile";
     }
 
-    @GetMapping("/step/2")
+    @GetMapping("/step/profile")
     public String signupStep2GetHandler() {
-        return "signup/step-2";
+        return "signup/profile";
     }
 
-    @PostMapping("/step/2")
+    @PostMapping("/step/profile")
     public String signupStep2PostHandler(@ModelAttribute ProfileSetupRequest psr,
                                          @SessionAttribute Member temporalMember) { // == Member temporalMember = (Member)(session.getAttribute("temporalMember"));
         temporalMember.setName(psr.name());
