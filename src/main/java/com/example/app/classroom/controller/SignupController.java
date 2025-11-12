@@ -6,6 +6,7 @@ import com.example.app.classroom.dto.ProfileSetupRequest;
 import com.example.app.classroom.mapper.MemberMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @RequestMapping("/signup")
 public class SignupController {
     final MemberMapper memberMapper;
+    //final JavaMailSender mailSender;
 
     @GetMapping("/step/account")
     public String signupStep1GetHandler() {
