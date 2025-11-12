@@ -37,7 +37,7 @@ public class SignupController {
 
     @PostMapping("/step/2")
     public String signupStep2PostHandler(@ModelAttribute ProfileSetupRequest psr,
-                                         @SessionAttribute Member temporalMember) {
+                                         @SessionAttribute Member temporalMember) { // == Member temporalMember = (Member)(session.getAttribute("temporalMember"));
         temporalMember.setName(psr.name());
         temporalMember.setBirthday(LocalDate.of(psr.year(), psr.month(), psr.date()));
         temporalMember.setGender(psr.gender());
