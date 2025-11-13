@@ -25,6 +25,10 @@ public class VerifyController {
 
     @GetMapping("/send/email")
     public String authCodeSend(@SessionAttribute Member logonMember) {
+        if(logonMember == null || logonMember.isActive()){
+            return "redirect:/index";
+        }
+
         int rand = (int) (Math.random() * 1000000);
         String code = String.format("%06d", rand);
 
