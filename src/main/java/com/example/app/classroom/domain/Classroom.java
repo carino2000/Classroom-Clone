@@ -14,4 +14,18 @@ public class Classroom {
     String theme;
 
     public Classroom() {}
+
+    public Classroom(String teacherId, String name, String description) {
+        this.teacherId = teacherId;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Classroom(String id, String teacherId, String name, String description, String joinCode) {
+        this.id = id;
+        this.teacherId = teacherId;
+        this.name = name;
+        this.description = description;
+        this.joinCode = joinCode;
+    }
 }

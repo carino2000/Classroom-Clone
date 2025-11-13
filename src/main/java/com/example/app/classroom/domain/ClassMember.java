@@ -12,4 +12,9 @@ public class ClassMember {
     String blocked;
 
     public ClassMember() {}
+
+    public ClassMember(String studentId, String classroomId) {
+        this.studentId = studentId;
+        this.classroomId = classroomId;
+    }
 }

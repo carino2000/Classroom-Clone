@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>test form</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+<div class="w-full h-screen flex justify-center items-center bg-gray-100">
+    <div class="w-3xl h-auto p-10 rounded-md flex bg-white">
+        <div class="flex-1">
+            <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="w-30 hover:scale-110 duration-100">
+            <h1 class="text-3xl mt-3">클래스룸 생성 테스트</h1>
+            <!--<a href="https://www.naver.com" onclick="return false;">네이버</a>
+            <a href="https://www.naver.com" onclick="event.preventDefault();">네이버</a>-->
+            <p class="mt-5">생성할 클래스룸 정보 입력</p>
+        </div>
+        <div class="flex-1">
+            <form action="/classroom" method="post" onsubmit="return formCheck();"
+                  class="space-y-2">
+                <div>
+                    <input type="text" id="name" name="name" placeholder="클래스룸 이름"
+                           class="border border-stone-400 rounded px-4 py-2 w-full "/>
+                    <span class="text-sm text-red-500 hidden"> ❌ 클래스룸 이름을 입력해주세요</span>
+                </div>
+                <div>
+                    <input type="text" id="description" name="description" value="" placeholder="클래스룸 설명"
+                           class="border border-stone-400 rounded px-4 py-2 w-full"/>
+                </div>
+                <div class="mt-3 text-right">
+                    <button class="text-gray-700 border border-stone-400 rounded px-2 py-1 hover:bg-blue-100 duration-200 mt-1">
+                        생성</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formCheck() {
+        const $name = document.getElementById("name");
+
+        if ($name.value){
+            return true;
+        }else{
+            if(!$name.value){
+                $name.classList.remove("border-stone-400");
+                $name.classList.add("border-red-400");
+                $name.nextElementSibling.classList.remove("hidden");
+            }else{
+                $name.classList.remove("border-red-400");
+                $name.classList.add("border-stone-400");
+                $name.nextElementSibling.classList.add("hidden");
+            }
+            return false;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+<h1>클래스룸 메인</h1>
+
+<ul>
+    <li th:text="${classroom.name}"></li>
+    <li th:text="${classroom.description}"></li>
+    <li th:text="${classroom.joinCode}"></li>
+</ul>
+
+
+
+</body>
+</html>

@@ -4,7 +4,18 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.app.classroom.mapper.ClassroomMapper">
 
+    <insert id="insertOne" parameterType="Classroom">
+        insert into classroom(id, teacher_id, name, description, join_code)
+        values(#{id}, #{teacherId}, #{name}, #{description}, #{joinCode})
+    </insert>
 
+
+    <select id="selectById" parameterType="String" resultType="Classroom">
+        select * from classroom where id=#{id}
+    </select>
+    <select id="selectByJoinCode" parameterType="string" resultType="classroom">
+        select * from classroom where join_code=#{joinCode}
+    </select>
 
 
 </mapper>
