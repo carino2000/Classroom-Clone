@@ -14,11 +14,11 @@ public class IndexController {
     @GetMapping
     public String indexHandler(@SessionAttribute(required = false) Member logonMember) {
         if(logonMember == null){
-            return "redirect:/login";
+            return "index";
         }else if(!logonMember.isActive()){
             return "redirect:/verify/send/email";
         }else{
-            return "index";
+            return "index-logon";
         }
 
     }
