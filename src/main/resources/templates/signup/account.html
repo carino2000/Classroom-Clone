@@ -22,7 +22,8 @@
                     <input type="text" id="id" name="id" placeholder="아이디" th:value="${acr.id}"
                            class="border border-stone-400 rounded px-4 py-2 w-full "/>
                     <span class="text-sm text-red-500 hidden"> ❌ 아이디를 입력해주세요</span>
-                    <span th:if="${duplicate != null}" class="text-sm text-red-500 hidden"> ❌ 이미 사용중인 아이디입니다</span>
+                    <span th:if="${duplicate}" class="text-sm text-red-500"> ❌ 이미 사용중인 아이디입니다</span>
+
                 </div>
                 <div>
                     <input type="password" id="pw" name="pw" placeholder="비밀번호"

@@ -31,7 +31,7 @@ public class VerifyController {
         Verification verification = new Verification();
         verification.setCode(code);
         verification.setMemberId(logonMember.getId());
-        verification.setExpiredAt(LocalDateTime.now().plusMinutes(30));
+        verification.setExpiredAt(LocalDateTime.now().plusHours(1));
         verificationMapper.insertOne(verification);
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -70,10 +70,11 @@ public class VerifyController {
 
         Verification verification = verificationMapper.selectLatestByMemberId(logonMember.getId());
 
+        boolean isExpired = verification.getExpiredAt().isBefore(LocalDateTime.now());
         boolean isVerified = verification.getCode().equals(code);
 
-        if(!isVerified){
-            ra.addFlashAttribute("isVerified", isVerified);
+        if(!isVerified || isExpired) {
+            ra.addFlashAttribute("isVerified", false);
             return "redirect:/verify/email";
         }
 
