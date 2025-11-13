@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+<div class="w-full h-screen flex justify-center items-center bg-gray-100">
+    <div class="w-3xl h-auto p-10 rounded-md flex bg-white">
+        <div class="flex-1">
+            <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="w-30 hover:scale-110 duration-100">
+            <h1 class="text-3xl mt-3">이메일 인증</h1>
+            <p class="mt-5">이메일 인증 코드를 입력해주세요</p>
+
+        </div>
+        <div class="flex-1">
+            <form action="/verify/email" method="post" onsubmit="return formCheck();"
+                  class="space-y-2">
+                <div>
+                    <input type="text" id="code" name="code" placeholder="인증코드"
+                           class="border border-stone-400 rounded px-4 py-2 w-full "/>
+                    <span class="text-sm text-red-500 hidden"> ❌ 인증코드를 입력해주세요</span>
+                    <span th:if="${isVerified != null && !isVerified}" class="text-sm text-red-500"> ❌ 인증이 실패했습니다. 다시 시도해주세요</span>
+                </div>
+                <div class="mt-3 text-right">
+                    <button class="text-gray-700 border border-stone-400 rounded px-2 py-1 hover:bg-blue-100 duration-200 mt-1">
+                        인증</button>
+                </div>
+            </form>
+            <div class="mt-20 text-right">
+                <a href="/verify/send/email" class="text-sm text-blue-400 hover:underline">인증코드 재전송</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    function formCheck() {
+        const $code = document.getElementById("code");
+
+        if ($code.value){
+            return true;
+        }else{
+            if(!$code.value){
+                $code.classList.remove("border-stone-400");
+                $code.classList.add("border-red-400");
+                $code.nextElementSibling.classList.remove("hidden");
+            }else{
+                $code.classList.remove("border-red-400");
+                $code.classList.add("border-stone-400");
+                $code.nextElementSibling.classList.add("hidden");
+            }
+            return false;
+        }
+    }
+</script>
+</body>
+</html>

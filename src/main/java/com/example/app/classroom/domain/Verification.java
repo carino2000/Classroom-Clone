@@ -14,4 +14,8 @@ public class Verification {
     LocalDateTime expiredAt;
 
     public Verification() {}
+
+    public Verification(String code) {
+        this.code = code;
+    }
 }
