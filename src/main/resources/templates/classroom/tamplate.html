@@ -7,9 +7,8 @@
 </head>
 <body class="">
 <nav class="h-20 fixed left-0 right-0 flex px-5 justify-between items-center bg-stone-100 ">
-    <div class="flex items-center gap-3">
-        <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40 h-14">
-        <a th:text="${classroom.name}" th:href="@{/classroom/{id}(id=${classroom.getId()})}"></a>
+    <div>
+        <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40">
     </div>
     <div class="flex items-center gap-4">
         <button type="button" class="rounded-3xl p-3 hover:scale-110 duration-100">
@@ -70,74 +69,9 @@
         </ul>
     </aside>
     <main class="flex-4 bg-white rounded-tl-4xl p-4 relative">
-        <nav class="px-10 border-b border-b-stone-300 sticky">
-            <ul class="flex gap-10">
-                <li class="p-4 text-emerald-400 font-bold border-b-2 border-b-emerald-500 hover:bg-emerald-50">
-                    <a href="">게시판</a>
-                </li>
-                <li class="p-4">수업 과제</li>
-                <li class="p-4">사용자</li>
-            </ul>
-        </nav>
-        <section class="p-4">
-            <div class="p-6 h-50 bg-gradient-to-r from-emerald-600 to-emerald-300 text-white rounded-2xl">
-                <h1 class="text-3xl font-bold" th:text="${classroom.name}"></h1>
-                <p class="mt-5 text-lg" th:text="${classroom.description}"></p>
-            </div>
-        </section>
-        <div class="p-4">
-            <button class="rounded-2xl px-4 py-2 bg-emerald-700/60 text-white hover:bg-emerald-700 duration-100"
-                    onclick="showNoticeModal()">공지사항 작성
-            </button>
-        </div>
+        <!--메인 구역-->
     </main>
 </div>
 
-
-
-<div id="noticeModal" onclick="closeNoticeModal()"
-        class="hidden absolute inset-0 bg-black/30 rounded-xl flex items-center justify-center">
-    <form onsubmit="return formCheck();" onclick="event.stopPropagation()"
-            th:action="@{/classroom/{classroomId}/notice(classroomId=${classroom.id})}" method="post" enctype="multipart/form-data"
-            class="bg-white rounded-2xl w-120 p-6">
-        <h1 class="text-lg">공지사항 올리기</h1>
-        <div class="h-40 border-t border-b my-2">
-            <textarea name="content" id="content" class="h-full w-full resize-none p-2 text-sm focus:outline-none"></textarea>
-            <span class="text-sm text-red-500 hidden"> ❌ 공지사항 내용을 입력해주세요</span>
-        </div>
-        <div class="flex justify-between items-center mt-5">
-            <input type="file" name="attachment" multiple class="w-1/2"/>
-            <button class="px-4 py-2 bg-emerald-500 rounded-3xl text-white hover:bg-emerald-600 hover:duration-200">게시</button>
-        </div>
-    </form>
-</div>
-
-
-<script>
-    function formCheck() {
-        const $content = document.getElementById("content");
-
-        if ($content.value) {
-            return true;
-        } else {
-            if (!$content.value) {
-                $content.nextElementSibling.classList.remove("hidden");
-            } else {
-                $content.nextElementSibling.classList.add("hidden");
-            }
-            return false;
-        }
-    }
-
-    function showNoticeModal() {
-        const $joinModal = document.getElementById("noticeModal");
-        $joinModal.classList.remove("hidden");
-    }
-
-    function closeNoticeModal() {
-        const $joinModal = document.getElementById("noticeModal");
-        $joinModal.classList.add("hidden");
-    }
-</script>
 </body>
 </html>

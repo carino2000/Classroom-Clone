@@ -16,6 +16,12 @@
     <select id="selectByJoinCode" parameterType="string" resultType="classroom">
         select * from classroom where join_code=#{joinCode}
     </select>
+    <select id="selectAllMyClassroomById" parameterType="string" resultType="ClassroomWithTeacher">
+        select classroom.*, teacher_id=#{id} as teacher from classroom where
+        teacher_id=#{id} or
+        id in(select classroom_id from class_member where student_id=#{id})
+        order by teacher desc, name asc
+    </select>
 
 
 </mapper>

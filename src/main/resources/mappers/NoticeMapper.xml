@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.app.classroom.mapper.NoticeMapper">
+
+    <insert id="insertNotice" parameterType="Notice">
+        insert into notice(classroom_id, content) values(#{classroomId}, #{content})
+    </insert>
+    <insert id="insertAttachment" parameterType="NoticeAttachment">
+        insert into notice_attachment(notice_id, file_name, file_size, file_url)
+        values(#{noticeId}, #{fileName} ,#{fileSize}, #{fileUrl})
+    </insert>
+    <insert id="insertReply" parameterType="NoticeReply">
+        insert into notice_reply(writer_id, notice_id, content)
+        values (#{writerId}, #{noticeId}, #{content})
+    </insert>
+
+
+    <select id="selectNoticeByClassroomId" parameterType="string" resultType="Notice">
+        select * from notice where classroom_id=#{classroomId} order by created_at desc
+    </select>
+    <select id="selectAttachmentByNoticeId" parameterType="int" resultType="NoticeAttachment">
+        select * from notice_attachment where notice_id=#{noticeId}
+    </select>
+    <select id="selectReplyByNoticeId" parameterType="int" resultType="NoticeReply">
+        select * from notice_reply where notice_id=#{noticeId} order by created_at asc
+    </select>
+
+
+</mapper>

@@ -1,15 +1,13 @@
 package com.example.app.classroom.controller;
 
 import com.example.app.classroom.domain.Member;
-import com.example.app.classroom.dto.LoginRequest;
+import com.example.app.classroom.dto.request.LoginRequest;
 import com.example.app.classroom.mapper.MemberMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,7 +16,7 @@ public class LoginController {
     final MemberMapper memberMapper;
 
     @GetMapping
-    public String loginGetHandler(@SessionAttribute(required = false) Member logonMember) {
+    public String loginGetHandle(@SessionAttribute(required = false) Member logonMember) {
         if (logonMember != null) {
             return "redirect:/index";
         }
@@ -26,7 +24,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public String loginPostHandler(@ModelAttribute LoginRequest loginRequest,
+    public String loginPostHandle(@ModelAttribute LoginRequest loginRequest,
                                    HttpSession session) {
         Member found = memberMapper.selectById(loginRequest.id());
 

@@ -53,7 +53,7 @@ public class VerifyController {
     }
 
     @GetMapping("/email")
-    public String verifyEmailGetHandler(@SessionAttribute(required = false) Member logonMember,
+    public String verifyEmailGetHandle(@SessionAttribute(required = false) Member logonMember,
                                         Model model) {
         if (logonMember == null) {
             return "redirect:/login";
@@ -63,7 +63,7 @@ public class VerifyController {
     }
 
     @PostMapping("/email")
-    public String verifyEmailPostHandler(@RequestParam String code,
+    public String verifyEmailPostHandle(@RequestParam String code,
                                          @SessionAttribute(required = false) Member logonMember,
                                          RedirectAttributes ra,
                                          HttpSession session) {

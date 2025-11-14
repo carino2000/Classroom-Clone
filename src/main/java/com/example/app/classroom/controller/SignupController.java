@@ -1,15 +1,11 @@
 package com.example.app.classroom.controller;
 
 import com.example.app.classroom.domain.Member;
-import com.example.app.classroom.domain.Verification;
-import com.example.app.classroom.dto.AccountCreationRequest;
-import com.example.app.classroom.dto.ProfileSetupRequest;
+import com.example.app.classroom.dto.request.AccountCreationRequest;
+import com.example.app.classroom.dto.request.ProfileSetupRequest;
 import com.example.app.classroom.mapper.MemberMapper;
-import com.example.app.classroom.mapper.VerificationMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,14 +22,14 @@ public class SignupController {
     final MemberMapper memberMapper;
 
     @GetMapping("/step/account")
-    public String signupStep1GetHandler(@ModelAttribute("acr") AccountCreationRequest acr,
+    public String signupStep1GetHandle(@ModelAttribute("acr") AccountCreationRequest acr,
                                         Model model) {
         return "signup/account";
     }
 
 
     @PostMapping("/step/account")
-    public String signupStep1PostHandler(@ModelAttribute AccountCreationRequest acr,
+    public String signupStep1PostHandle(@ModelAttribute AccountCreationRequest acr,
                                          HttpSession session,
                                          RedirectAttributes ra) {
         Member found = memberMapper.selectById(acr.id());
@@ -53,13 +48,13 @@ public class SignupController {
     }
 
     @GetMapping("/step/profile")
-    public String signupStep2GetHandler() {
+    public String signupStep2GetHandle() {
         return "signup/profile";
     }
 
     @PostMapping("/step/profile")
     @Transactional //해당 공간에서 실시하는 모든 DB작업을 취합한 뒤, 오류 안나면 커밋, 오류나면 롤백
-    public String signupStep2PostHandler(@ModelAttribute ProfileSetupRequest psr,
+    public String signupStep2PostHandle(@ModelAttribute ProfileSetupRequest psr,
                                          @SessionAttribute Member temporalMember) { // == Member temporalMember = (Member)(session.getAttribute("temporalMember"));
         temporalMember.setName(psr.name());
         temporalMember.setBirthday(LocalDate.of(psr.year(), psr.month(), psr.date()));
