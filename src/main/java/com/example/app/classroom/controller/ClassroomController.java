@@ -1,18 +1,22 @@
 package com.example.app.classroom.controller;
 
-import com.example.app.classroom.domain.ClassMember;
-import com.example.app.classroom.domain.Classroom;
-import com.example.app.classroom.domain.Member;
+import com.example.app.classroom.domain.*;
+import com.example.app.classroom.dto.projection.NoticeWithAttachment;
 import com.example.app.classroom.dto.request.CreateClassroomRequest;
 import com.example.app.classroom.dto.request.CreateNoticeRequest;
 import com.example.app.classroom.mapper.ClassMemberMapper;
 import com.example.app.classroom.mapper.ClassroomMapper;
+import com.example.app.classroom.mapper.NoticeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,6 +26,7 @@ import java.util.UUID;
 public class ClassroomController {
     final ClassroomMapper classroomMapper;
     final ClassMemberMapper classMemberMapper;
+    final NoticeMapper noticeMapper;
 
     @GetMapping
     public String classroomGetHandle() {
@@ -84,7 +89,23 @@ public class ClassroomController {
         if (found == null) {
             return "redirect:/index";
         }
+
+        List<Notice> noticeList = noticeMapper.selectNoticeByClassroomId(found.getId());
+
+        List<NoticeWithAttachment> noticeWithAttachments = new ArrayList<>();
+        for(Notice one : noticeList){
+            NoticeWithAttachment nwa = new NoticeWithAttachment();
+            nwa.setContent(one.getContent());
+            nwa.setCreatedAt(one.getCreatedAt());
+            nwa.setId(one.getId());
+            nwa.setClassroomId(one.getClassroomId());
+            nwa.setAttachments(noticeMapper.selectAttachmentByNoticeId(one.getId()));
+
+            noticeWithAttachments.add(nwa);
+        }
+
         model.addAttribute("classroom", found);
+        model.addAttribute("noticeList", noticeWithAttachments);
 
         return "classroom/main";
     }
@@ -97,23 +118,44 @@ public class ClassroomController {
         if (logonMember == null) {
             return "redirect:/login";
         }
-
-        for (MultipartFile file : cnr.attachment()){
-            if (file.isEmpty()){
-                continue;
-            }
-            long size = file.getSize(); //파일 사이즈
-            String contentType = file.getContentType(); //파일 타입 (image/png, application/pdf...)
-            String name = file.getName(); // html에서 넘어온 인풋 이름(attachment)
-            String originName = file.getOriginalFilename(); // 파일 원래 이름
-            // file.getInputStream();
-            System.out.println("file size: " + file.getSize());
-            System.out.println("contentType: " + contentType);
-            System.out.println("name: " + name);
-            System.out.println("originName: " + originName);
+        if(cnr.content().isEmpty() && cnr.attachment().getFirst().isEmpty()) { //컨텐츠도, 첨부파일도 없으면 인서트 안하고 리다이렉트
+            return "redirect:/classroom/" + classroomId;
         }
 
-        // 다음주부터 이 이후에 파일 받아서 아웃풋으로 넣는 작업 시작!
+        Notice notice = new  Notice(classroomId, cnr.content());
+        noticeMapper.insertNotice(notice); //매퍼 쿼리에서 id 반환 (useGeneratedKeys=true)
+
+
+        try{
+            for (MultipartFile file : cnr.attachment()) {
+                if (file.isEmpty()) {
+                    continue;
+                }
+
+                /*
+                long size = file.getSize(); //파일 사이즈
+                String contentType = file.getContentType(); //파일 타입 (image/png, application/pdf...)
+                String name = file.getName(); // html에서 넘어온 인풋 이름(attachment)
+                String originName = file.getOriginalFilename(); // 파일 원래 이름
+                 */
+
+                String uuid = UUID.randomUUID().toString().replaceAll("-", ""); // 파일 이름 겹치기 방지용 폴더 이름 생성
+                Path uploadPath = Path.of(System.getProperty("user.home"), "files", uuid);
+                Files.createDirectories(uploadPath);
+                file.transferTo(Path.of(uploadPath.toString(), file.getOriginalFilename()));
+
+                NoticeAttachment attachment = new NoticeAttachment();
+                attachment.setNoticeId(notice.getId());
+                attachment.setFileName(file.getOriginalFilename());
+                attachment.setFileSize(file.getSize());
+                attachment.setFileContentType(file.getContentType());
+                attachment.setFileUrl("/files/" + uuid +  "/" + file.getOriginalFilename());
+                noticeMapper.insertAttachment(attachment);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return "redirect:/classroom/" + classroomId;
     }

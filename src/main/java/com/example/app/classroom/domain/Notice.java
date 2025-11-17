@@ -12,4 +12,12 @@ public class Notice {
     String classroomId;
     String content;
     LocalDateTime createdAt;
+
+    public Notice() {
+    }
+
+    public Notice(String classroomId, String content) {
+        this.classroomId = classroomId;
+        this.content = content;
+    }
 }
