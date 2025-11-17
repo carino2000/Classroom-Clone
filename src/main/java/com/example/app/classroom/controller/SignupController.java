@@ -23,15 +23,15 @@ public class SignupController {
 
     @GetMapping("/step/account")
     public String signupStep1GetHandle(@ModelAttribute("acr") AccountCreationRequest acr,
-                                        Model model) {
+                                       Model model) {
         return "signup/account";
     }
 
 
     @PostMapping("/step/account")
     public String signupStep1PostHandle(@ModelAttribute AccountCreationRequest acr,
-                                         HttpSession session,
-                                         RedirectAttributes ra) {
+                                        HttpSession session,
+                                        RedirectAttributes ra) {
         Member found = memberMapper.selectById(acr.id());
         if (found != null) {
             ra.addFlashAttribute("duplicate", true);
@@ -55,16 +55,17 @@ public class SignupController {
     @PostMapping("/step/profile")
     @Transactional //해당 공간에서 실시하는 모든 DB작업을 취합한 뒤, 오류 안나면 커밋, 오류나면 롤백
     public String signupStep2PostHandle(@ModelAttribute ProfileSetupRequest psr,
-                                         @SessionAttribute Member temporalMember) { // == Member temporalMember = (Member)(session.getAttribute("temporalMember"));
+                                        @SessionAttribute Member temporalMember,
+                                        HttpSession session) { // == Member temporalMember = (Member)(session.getAttribute("temporalMember"));
         temporalMember.setName(psr.name());
         temporalMember.setBirthday(LocalDate.of(psr.year(), psr.month(), psr.date()));
         temporalMember.setGender(psr.gender());
         memberMapper.insertOne(temporalMember);
 
+        session.invalidate();
+
         return "redirect:/login";
     }
-
-
 
 
 }

@@ -30,10 +30,6 @@ public class ClassroomController {
     final NoticeMapper noticeMapper;
     final MemberMapper memberMapper;
 
-    @GetMapping
-    public String classroomGetHandle() {
-        return "classroom/form";
-    }
 
     @PostMapping
     public String classroomPostHandle(@SessionAttribute(required = false) Member logonMember,

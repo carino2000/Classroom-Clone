@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,7 +9,8 @@
 <body class="" >
 <nav class="h-20 fixed left-0 right-0 flex px-5 justify-between items-center bg-stone-100 z-50">
     <div>
-        <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40">
+        <img onclick="location.href='/index'"
+             src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40">
     </div>
     <div class="flex items-center gap-1 justify-center">
         <button type="button" onclick="showAddModal()" class="rounded-4xl p-3 relative">
@@ -22,23 +24,35 @@
         <!--여기부터 만들어보기!!-->
         <div id="addModal" class="absolute top-15 right-25 w-35 z-10 bg-gray-50 rounded-xl shadow-lg hidden">
             <div class="flex flex-col py-3">
-                <div onclick="showCreateModal(); closeAddModal()"
+                <div onclick="showCreateModal(); "
                      class="px-4 py-3 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
                     수업 만들기
                 </div>
-                <div onclick="showJoinModal(); closeAddModal()"
-                        class="px-4 py-3 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
+                <div onclick="showJoinModal(); "
+                     class="px-4 py-3 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
                     수업 참여하기
                 </div>
             </div>
         </div>
 
-        <button th:text="${session.logonMember.name.charAt(0)}"
+        <button th:text="${session.logonMember.name.charAt(0)}" onclick="showProfileModal()"
                 type="button" class="rounded-4xl bg-emerald-700/70 text-white px-3 py-2 hover:bg-emerald-700/80">
         </button>
+
+        <div id="profileModal" class="absolute top-16 right-8 w-35 z-10 bg-gray-50 rounded-xl shadow-lg hidden">
+            <div class="flex flex-col py-3">
+                <div onclick="location.href='/logout'"
+                     class="px-4 py-3 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
+                    로그아웃
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </nav>
-<div class="min-h-screen bg-stone-100 pt-18 flex" onclick="closeAddModal()">
+<div class="min-h-screen bg-stone-100 pt-18 flex" onclick="closeAllModal();">
     <aside class="flex-1 px-3 hidden md:block mt-3">
         <ul class="space-y-3">
             <li class="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-stone-200">
@@ -85,7 +99,7 @@
     </aside>
     <main class="flex-4 bg-white rounded-tl-4xl p-4 relative">
         <!--classListSize == 0 일 때 상황--><!--#lists.isEmpty(classList) 이거 써도 됨?-->
-        <div th:if="${classListSize == 0}"
+        <div th:if="${classesSize == 0}"
              class="w-80 h-100 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col">
             <div class="flex-3 bg-[url('/images/empty_states_home.png')] bg-contain mb-10 bg-center bg-no-repeat"></div>
             <div class="flex-1 text-center text-sm">
@@ -104,9 +118,9 @@
         </div>
 
         <!--classList가 하나라도 있을 때 상황-->
-        <div th:unless="${classListSize == 0}"
-             class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 p-10 sm:gap-3 xl:gap-10">
-            <div th:each="one : ${classList}" th:onclick="|location.href='@{/classroom/{id}(id=${one.id})}'|"
+        <div th:unless="${classesSize == 0}"
+             class="grid sm:grid-cols-2 2xl:grid-cols-3 p-10 sm:gap-3 xl:gap-10">
+            <div th:each="one : ${classes}" th:onclick="|location.href='@{/classroom/{id}(id=${one.id})}'|"
                  class="h-50 p-15 mt-5 border border-stone-200 rounded-xl hover:shadow-xl hover:duration-200">
                 <h2 th:text="${one.name}"></h2>
                 <p th:text="${one.description}"></p>
@@ -122,7 +136,7 @@
 
 
 <!-- join 모달 화면 코드-->
-<div id="joinModal" onclick="closeJoinModal()"
+<div id="joinModal" onclick="closeAllModal();"
      class="absolute bg-black/30 top-0 left-0 right-0 bottom-0 flex items-center justify-center hidden z-100">
     <div onclick="event.stopPropagation()" class="h-1/3.5 w-1/3 bg-white rounded-xl p-3">
         <h1 class="text-2xl mt-5">수업 참여하기</h1>
@@ -146,7 +160,7 @@
 </div>
 
 <!--create 모달 화면 코드-->
-<div id="createModal" onclick="closeCreateModal()"
+<div id="createModal" onclick="closeAllModal();"
      class="absolute bg-black/30 top-0 left-0 right-0 bottom-0 flex items-center justify-center hidden z-100 shadow-xl">
     <div onclick="event.stopPropagation()" class="h-1/3.5 w-1/3 bg-white rounded-xl p-3">
         <h1 class="text-2xl mt-5 mb-10">수업 만들기</h1>
@@ -173,17 +187,6 @@
 
 
 <script>
-        function showAddModal(){
-            const $addModal = document.getElementById("addModal");
-            $addModal.classList.remove("hidden");
-        }
-
-        function closeAddModal() {
-            const $addModal = document.getElementById("addModal");
-            $addModal.classList.add("hidden");
-        }
-
-
     function createFormCheck() {
         const $name = document.getElementById("name");
 
@@ -224,26 +227,37 @@
     }
 
     function showJoinModal() {
+        closeAllModal();
         const $joinModal = document.getElementById("joinModal");
         $joinModal.classList.remove("hidden");
     }
+    function showCreateModal() {
+        closeAllModal();
+        const $createModal = document.getElementById("createModal");
+        $createModal.classList.remove("hidden");
+    }
+    function showAddModal(){
+        closeAllModal();
+        const $addModal = document.getElementById("addModal");
+        $addModal.classList.remove("hidden");
+    }
+    function showProfileModal(){
+        closeAllModal();
+        const $profileModal = document.getElementById("profileModal");
+        $profileModal.classList.remove("hidden");
+    }
 
-    function closeJoinModal() {
+
+    function closeAllModal() {
+        const $profileModal = document.getElementById("profileModal");
+        $profileModal.classList.add("hidden");
+        const $addModal = document.getElementById("addModal");
+        $addModal.classList.add("hidden");
+        const $createModal = document.getElementById("createModal");
+        $createModal.classList.add("hidden");
+
         const $joinModal = document.getElementById("joinModal");
         $joinModal.classList.add("hidden");
     }
 
-
-    function showCreateModal() {
-        const $createModal = document.getElementById("createModal");
-        $createModal.classList.remove("hidden");
-    }
-
-    function closeCreateModal() {
-        const $createModal = document.getElementById("createModal");
-        $createModal.classList.add("hidden");
-    }
 </script>
-
-</body>
-</html>

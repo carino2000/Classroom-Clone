@@ -28,8 +28,8 @@ public class IndexController {
             return "redirect:/verify/send/email";
         }else{
             List<ClassroomWithTeacher> classroomList = classroomMapper.selectAllMyClassroomById(logonMember.getId());
-            model.addAttribute("classList", classroomList);
-            model.addAttribute("classListSize", classroomList.size());
+            model.addAttribute("classes", classroomList);
+            model.addAttribute("classesSize", classroomList.size());
             return "index-logon";
         }
     }
