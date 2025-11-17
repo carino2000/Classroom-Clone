@@ -10,4 +10,5 @@ public class NoticeAttachment {
     int noticeId;
     String fileName;
     String fileUrl;
+    String contentType;
 }

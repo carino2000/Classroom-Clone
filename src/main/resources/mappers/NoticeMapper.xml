@@ -8,8 +8,8 @@
         insert into notice(classroom_id, content) values(#{classroomId}, #{content})
     </insert>
     <insert id="insertAttachment" parameterType="NoticeAttachment">
-        insert into notice_attachment(notice_id, file_name, file_size, file_url)
-        values(#{noticeId}, #{fileName} ,#{fileSize}, #{fileUrl})
+        insert into notice_attachment(notice_id, file_name, file_size, file_url, file_content_type)
+        values(#{noticeId}, #{fileName} ,#{fileSize}, #{fileUrl}, #{fileContentType})
     </insert>
     <insert id="insertReply" parameterType="NoticeReply">
         insert into notice_reply(writer_id, notice_id, content)

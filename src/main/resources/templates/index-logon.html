@@ -11,16 +11,22 @@
         <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40">
     </div>
     <div class="flex items-center gap-4 justify-center">
-        <button type="button" onclick="showAddModal()" class="rounded-3xl p-3 relative">
+        <button type="button" onclick="showAddModal()" class="rounded-4xl p-3 relative">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="w-8 h-8 hover:scale-110 duration-100 ">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                 stroke="currentColor"
+                 class="w-8 h-8 hover:scale-110 hover:bg-gray-200 rounded-4xl m-3 duration-100 size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
             </svg>
-            <!--여기부터 만들어보기!!-->
-            <div id="addModal" class="absolute top-12 -left-20 w-30 h-30 border z-10">
 
+            <!--여기부터 만들어보기!!-->
+            <div id="addModal" class="absolute top-15 -left-18 w-30 h-30 border z-10 hidden">
+                <div class="flex flex-col h-full">
+                    <div class="border-b flex-1"></div>
+                    <div class="border-b flex-1"></div>
+                    <div class="flex-1"></div>
+                </div>
             </div>
+
         </button>
         <button th:text="${session.logonMember.name.charAt(0)}"
                 type="button" class="rounded-4xl bg-emerald-700/70 text-white px-3 py-2 hover:bg-emerald-700/80">
@@ -75,7 +81,7 @@
     <main class="flex-4 bg-white rounded-tl-4xl p-4 relative">
         <!--classListSize == 0 일 때 상황--><!--#lists.isEmpty(classList) 이거 써도 됨?-->
         <div th:if="${classListSize == 0}"
-                class="w-80 h-100 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col">
+             class="w-80 h-100 absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col">
             <div class="flex-3 bg-[url('/images/empty_states_home.png')] bg-contain mb-10 bg-center bg-no-repeat"></div>
             <div class="flex-1 text-center text-sm">
                 <p>
@@ -93,13 +99,16 @@
         </div>
 
         <!--classList가 하나라도 있을 때 상황-->
-        <div th:unless="${classListSize == 0}" class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 p-10 sm:gap-3 xl:gap-10">
+        <div th:unless="${classListSize == 0}"
+             class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 p-10 sm:gap-3 xl:gap-10">
             <div th:each="one : ${classList}" th:onclick="|location.href='@{/classroom/{id}(id=${one.id})}'|"
                  class="h-50 p-15 mt-5 border border-stone-200 rounded-xl hover:shadow-xl hover:duration-200">
                 <h2 th:text="${one.name}"></h2>
                 <p th:text="${one.description}"></p>
-                <svg th:if="${one.teacher}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+                <svg th:if="${one.teacher}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"/>
                 </svg>
             </div>
         </div>
@@ -150,7 +159,8 @@
             </div>
             <div class="mt-3 text-right">
                 <button class="text-gray-700 border border-stone-400 rounded px-2 py-1 hover:bg-blue-100 duration-200 mt-1">
-                    생성</button>
+                    생성
+                </button>
             </div>
         </form>
     </div>
@@ -158,23 +168,23 @@
 
 
 <script>
-/*    function showAddModal(){
-        const $joinModal = document.getElementById("addModal");
-        $joinModal.classList.remove("hidden");
-    }*/
+    /*    function showAddModal(){
+            const $joinModal = document.getElementById("addModal");
+            $joinModal.classList.remove("hidden");
+        }*/
 
 
     function createFormCheck() {
         const $name = document.getElementById("name");
 
-        if ($name.value){
+        if ($name.value) {
             return true;
-        }else{
-            if(!$name.value){
+        } else {
+            if (!$name.value) {
                 $name.classList.remove("border-stone-400");
                 $name.classList.add("border-red-400");
                 $name.nextElementSibling.classList.remove("hidden");
-            }else{
+            } else {
                 $name.classList.remove("border-red-400");
                 $name.classList.add("border-stone-400");
                 $name.nextElementSibling.classList.add("hidden");
