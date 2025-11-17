@@ -6,6 +6,7 @@ import com.example.app.classroom.dto.request.CreateClassroomRequest;
 import com.example.app.classroom.dto.request.CreateNoticeRequest;
 import com.example.app.classroom.mapper.ClassMemberMapper;
 import com.example.app.classroom.mapper.ClassroomMapper;
+import com.example.app.classroom.mapper.MemberMapper;
 import com.example.app.classroom.mapper.NoticeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class ClassroomController {
     final ClassroomMapper classroomMapper;
     final ClassMemberMapper classMemberMapper;
     final NoticeMapper noticeMapper;
+    final MemberMapper memberMapper;
 
     @GetMapping
     public String classroomGetHandle() {
@@ -108,6 +110,34 @@ public class ClassroomController {
         model.addAttribute("noticeList", noticeWithAttachments);
 
         return "classroom/main";
+    }
+
+    @GetMapping("/{classroomId}/attendance")
+    public String classroomAttendanceGetHandle(@SessionAttribute(required = false) Member logonMember,
+                                               @PathVariable String classroomId,
+                                               Model model) {
+        if (logonMember == null) {
+            return "redirect:/login";
+        }
+        Classroom found = classroomMapper.selectById(classroomId);
+        if (found == null) {
+            return "redirect:/index";
+        }
+
+        Member teacher = memberMapper.selectById(found.getTeacherId());
+        List<String> ids = classMemberMapper.selectStudentIdByClassroomId(found.getId());
+        List<Member> students = new ArrayList<>();
+        if(!ids.isEmpty()){
+            students = memberMapper.selectByIds(ids);
+        }else{
+            students = null;
+        }
+
+        model.addAttribute("classroom", found);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("students", students);
+
+        return "classroom/attendance";
     }
 
 

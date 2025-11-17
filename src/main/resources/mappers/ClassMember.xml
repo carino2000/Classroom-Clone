@@ -12,6 +12,10 @@
     <select id="selectByStudentAndClassId" parameterType="map" resultType="ClassMember">
         select * from class_member where student_id=#{studentId} and classroom_id=#{classroomId};
     </select>
+    <select id="selectStudentIdByClassroomId" resultType="string" parameterType="string">
+        select student_id from class_member where classroom_id=#{classroomId}
+    </select>
+
 
 
 </mapper>

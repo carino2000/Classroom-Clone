@@ -5,7 +5,7 @@
     <title>클래스룸 홈</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="">
+<body class="" >
 <nav class="h-20 fixed left-0 right-0 flex px-5 justify-between items-center bg-stone-100 z-50">
     <div>
         <img src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40">
@@ -17,23 +17,28 @@
                  class="w-8 h-8 hover:scale-110 hover:bg-gray-200 rounded-4xl m-3 duration-100 size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
             </svg>
+        </button>
 
-            <!--여기부터 만들어보기!!-->
-            <div id="addModal" class="absolute top-15 -left-18 w-30 h-30 border z-10 hidden">
-                <div class="flex flex-col h-full">
-                    <div class="border-b flex-1"></div>
-                    <div class="border-b flex-1"></div>
-                    <div class="flex-1"></div>
+        <!--여기부터 만들어보기!!-->
+        <div id="addModal" class="absolute top-15 right-25 w-35 z-10 bg-gray-50 rounded-xl shadow-lg hidden">
+            <div class="flex flex-col py-3">
+                <div onclick="showCreateModal(); closeAddModal()"
+                     class="px-4 py-3 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
+                    수업 만들기
+                </div>
+                <div onclick="showJoinModal(); closeAddModal()"
+                        class="px-4 py-3 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
+                    수업 참여하기
                 </div>
             </div>
+        </div>
 
-        </button>
         <button th:text="${session.logonMember.name.charAt(0)}"
                 type="button" class="rounded-4xl bg-emerald-700/70 text-white px-3 py-2 hover:bg-emerald-700/80">
         </button>
     </div>
 </nav>
-<div class="min-h-screen bg-stone-100 pt-18 flex">
+<div class="min-h-screen bg-stone-100 pt-18 flex" onclick="closeAddModal()">
     <aside class="flex-1 px-3 hidden md:block mt-3">
         <ul class="space-y-3">
             <li class="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-stone-200">
@@ -118,7 +123,7 @@
 
 <!-- join 모달 화면 코드-->
 <div id="joinModal" onclick="closeJoinModal()"
-     class="absolute bg-black/30 top-0 left-0 right-0 bottom-0 flex items-center justify-center hidden">
+     class="absolute bg-black/30 top-0 left-0 right-0 bottom-0 flex items-center justify-center hidden z-100">
     <div onclick="event.stopPropagation()" class="h-1/3.5 w-1/3 bg-white rounded-xl p-3">
         <h1 class="text-2xl mt-5">수업 참여하기</h1>
 
@@ -142,15 +147,15 @@
 
 <!--create 모달 화면 코드-->
 <div id="createModal" onclick="closeCreateModal()"
-     class="absolute bg-black/30 top-0 left-0 right-0 bottom-0 flex items-center justify-center hidden">
+     class="absolute bg-black/30 top-0 left-0 right-0 bottom-0 flex items-center justify-center hidden z-100 shadow-xl">
     <div onclick="event.stopPropagation()" class="h-1/3.5 w-1/3 bg-white rounded-xl p-3">
-        <h1 class="text-2xl mt-5">수업 만들기</h1>
+        <h1 class="text-2xl mt-5 mb-10">수업 만들기</h1>
 
         <form action="/classroom" method="post" onsubmit="return createFormCheck();"
               class="space-y-2">
             <div>
                 <input type="text" id="name" name="name" placeholder="클래스룸 이름"
-                       class="border border-stone-400 rounded px-4 py-2 w-full "/>
+                       class="border border-stone-400 rounded px-4 py-2 w-full mb-1"/>
                 <span class="text-sm text-red-500 hidden"> ❌ 클래스룸 이름을 입력해주세요</span>
             </div>
             <div>
@@ -168,10 +173,15 @@
 
 
 <script>
-    /*    function showAddModal(){
-            const $joinModal = document.getElementById("addModal");
-            $joinModal.classList.remove("hidden");
-        }*/
+        function showAddModal(){
+            const $addModal = document.getElementById("addModal");
+            $addModal.classList.remove("hidden");
+        }
+
+        function closeAddModal() {
+            const $addModal = document.getElementById("addModal");
+            $addModal.classList.add("hidden");
+        }
 
 
     function createFormCheck() {
