@@ -4,6 +4,7 @@ import com.example.app.classroom.domain.*;
 import com.example.app.classroom.dto.projection.NoticeWithAttachment;
 import com.example.app.classroom.dto.request.CreateClassroomRequest;
 import com.example.app.classroom.dto.request.CreateNoticeRequest;
+import com.example.app.classroom.dto.request.ReplyAddRequest;
 import com.example.app.classroom.mapper.ClassMemberMapper;
 import com.example.app.classroom.mapper.ClassroomMapper;
 import com.example.app.classroom.mapper.MemberMapper;
@@ -98,12 +99,14 @@ public class ClassroomController {
             nwa.setId(one.getId());
             nwa.setClassroomId(one.getClassroomId());
             nwa.setAttachments(noticeMapper.selectAttachmentByNoticeId(one.getId()));
+            nwa.setReplies(noticeMapper.selectReplyByNoticeId(one.getId()));
 
             noticeWithAttachments.add(nwa);
         }
 
         model.addAttribute("classroom", found);
         model.addAttribute("noticeList", noticeWithAttachments);
+        model.addAttribute("logonMember", logonMember);
 
         return "classroom/main";
     }
@@ -185,5 +188,33 @@ public class ClassroomController {
 
         return "redirect:/classroom/" + classroomId;
     }
+
+
+    @PostMapping("/{classroomId}/reply/add")
+    public String classroomReplyAddHandle(@SessionAttribute(required = false) Member logonMember,
+                                            @PathVariable String classroomId,
+                                            @ModelAttribute ReplyAddRequest rar) {
+        if (logonMember == null) {
+            return "redirect:/login";
+        }
+
+        NoticeReply reply = new NoticeReply(rar.noticeId(), logonMember.getId(), rar.comment());
+        noticeMapper.insertReply(reply);
+
+        return "redirect:/classroom/" + classroomId;
+    }
+
+    @PostMapping("/{classroomId}/reply/delete")
+    public String classroomReplyDeleteHandle(@SessionAttribute(required = false) Member logonMember,
+                                            @PathVariable String classroomId,
+                                            @RequestParam int replyId) {
+        if (logonMember == null) {
+            return "redirect:/login";
+        }
+
+        noticeMapper.deleteReplyById(replyId);
+        return "redirect:/classroom/" + classroomId;
+    }
+
 
 }

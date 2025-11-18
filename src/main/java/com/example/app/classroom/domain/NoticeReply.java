@@ -11,6 +11,14 @@ public class NoticeReply {
     int id;
     int noticeId;
     String writerId;
-    String content;
+    String comment;
     LocalDateTime createdAt;
+
+    public NoticeReply() {}
+
+    public NoticeReply(int noticeId, String writerId, String comment) {
+        this.noticeId = noticeId;
+        this.writerId = writerId;
+        this.comment = comment;
+    }
 }

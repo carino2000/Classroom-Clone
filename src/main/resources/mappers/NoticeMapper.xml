@@ -12,8 +12,8 @@
         values(#{noticeId}, #{fileName} ,#{fileSize}, #{fileUrl}, #{fileContentType})
     </insert>
     <insert id="insertReply" parameterType="NoticeReply">
-        insert into notice_reply(writer_id, notice_id, content)
-        values (#{writerId}, #{noticeId}, #{content})
+        insert into notice_reply(writer_id, notice_id, comment)
+        values (#{writerId}, #{noticeId}, #{comment})
     </insert>
 
 
@@ -26,6 +26,11 @@
     <select id="selectReplyByNoticeId" parameterType="int" resultType="NoticeReply">
         select * from notice_reply where notice_id=#{noticeId} order by created_at asc
     </select>
+
+
+    <delete id="deleteReplyById" parameterType="int">
+        delete from notice_reply where id=#{replyId}
+    </delete>
 
 
 </mapper>

@@ -17,4 +17,7 @@ public interface NoticeMapper {
     List<Notice> selectNoticeByClassroomId(String classroomId);
     List<NoticeAttachment> selectAttachmentByNoticeId(int noticeId);
     List<NoticeReply> selectReplyByNoticeId(int noticeId);
+
+
+    int deleteReplyById(int replyId);
 }

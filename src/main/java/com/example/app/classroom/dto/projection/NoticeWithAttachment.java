@@ -2,6 +2,7 @@ package com.example.app.classroom.dto.projection;
 
 import com.example.app.classroom.domain.Notice;
 import com.example.app.classroom.domain.NoticeAttachment;
+import com.example.app.classroom.domain.NoticeReply;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Setter
 public class NoticeWithAttachment extends Notice{
     List<NoticeAttachment> attachments;
+    List<NoticeReply> replies;
 
     public NoticeWithAttachment() {
     }

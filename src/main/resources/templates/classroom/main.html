@@ -79,7 +79,7 @@
             </li>
         </ul>
     </aside>
-    <main class="flex-col flex-4 bg-white rounded-tl-4xl p-4 relative">
+    <main onclick="closeReplyDeleteModal()" class="flex-col flex-4 bg-white rounded-tl-4xl p-4 relative">
 
         <nav class="px-10 border-b border-b-stone-300 sticky">
             <ul class="flex gap-10">
@@ -101,15 +101,17 @@
         <div class="p-4">
             <button class="flex gap-2 rounded-2xl px-4 py-2 bg-emerald-700/60 text-white hover:bg-emerald-700 duration-100"
                     onclick="showNoticeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
                 </svg>
                 공지사항 작성
             </button>
         </div>
         <section class="p-4 flex flex-col items-center">
-        <!--noticeList 자리-->
-            <article th:each="one : ${noticeList}" class="mb-4 p-5 bg-white shadow-sm rounded-2xl border w-175">
+            <!--noticeList 자리-->
+            <article th:each="one : ${noticeList}" class="mb-4 p-4 pb-3 bg-white shadow-sm rounded-2xl border w-175">
 
                 <!-- 헤더(작성자, 날짜) -->
                 <header class="flex items-center justify-between mb-2">
@@ -132,7 +134,7 @@
                                  class="w-5 h-5 text-gray-500"
                                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828a4 4 0 10-5.656-5.656L6.343 10.172a6 6 0 108.485 8.485L21 12" />
+                                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828a4 4 0 10-5.656-5.656L6.343 10.172a6 6 0 108.485 8.485L21 12"/>
                             </svg>
 
                             <a th:href="@{${attachment.fileUrl}}" download
@@ -144,10 +146,84 @@
                 </div>
 
                 <!-- 댓글 영역 -->
-                <footer class="mt-4 pt-3 border-t">
-                    <div class="text-gray-600">💬 댓글 영역</div>
-                </footer>
+                <div class="mt-4 pt-3 border-t">
+                    <div class="text-gray-600">
+                        💬 댓글 작성
+                        <form th:action="@{'/classroom/' + ${classroom.id} + '/reply/add'}" method="post"
+                              class="flex justify-between gap-5 items-center">
+                            <input type="hidden" name="noticeId" th:value="${one.id}">
+                            <input type="text" name="comment" id="comment" placeholder="당신의 의견을 남겨주세요!" required
+                                   class="flex-9 mt-3 mb-1 p-2 bg-gray-50 rounded-3xl"/>
+                            <button type="submit"
+                                    class="flex-1 m-1 mb-0 h-10 w-5 bg-blue-500 text-white rounded-lg shadow-md
+                                    hover:bg-blue-600 active:shadow-sm active:scale-95 transition-all duration-150 font-medium">
+                                작성
+                            </button>
+                        </form>
+                    </div>
 
+                    <!-- 댓글 노출 영역 -->
+                    <div th:if="${one.replies != null and one.replies.size() != 0}"
+                         class="mt-4 pt-3">
+
+                        <!-- 총 갯수 -->
+                        <div class="text-gray-700 font-medium mb-2 mx-1 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" class="size-6 text-blue-700/80">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/>
+                            </svg>
+                            <span th:text="|수업 댓글 ${one.replies.size()}개|"
+                                  class="mx-1 text-blue-700/80 font-bold text-sm"></span>
+                        </div>
+
+                        <!-- 댓글 리스트 -->
+                        <div class="space-y-3">
+
+                            <!-- 개별 댓글 -->
+                            <!-- 댓글 카드 (부모에 relative + 고유 클래스) -->
+                            <div th:each="reply : ${one.replies}" class="p-3 bg-gray-50 rounded-xl relative reply-card">
+                                <!-- 작성자 + 날짜 -->
+                                <header class="flex items-center justify-between mb-2">
+                                    <b class="text-gray-800 text-sm" th:text="${reply.writerId}"></b>
+                                    <small class="text-gray-500 text-xs" th:text="${reply.createdAt}"></small>
+                                </header>
+
+                                <!-- 댓글 내용 + 옵션 버튼 -->
+                                <div class="flex justify-between items-start">
+                                    <p class="text-gray-700 text-sm leading-snug" th:text="${reply.comment}"></p>
+
+                                    <div th:if="${reply.writerId == logonMember.id}" class="relative">
+                                        <!-- stopPropagation + this 전달 (버튼 누를 때 main 클릭으로 닫히는 것 방지) -->
+                                        <button type="button"
+                                                onclick="event.stopPropagation(); showReplyDeleteModal(this)"
+                                                class="rounded-3xl hover:scale-110 hover:bg-gray-200 p-1">
+                                            <!-- 옵션 아이콘 -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"/>
+                                            </svg>
+                                        </button>
+
+                                        <!-- 모달: id 대신 클래스 사용, 기본 hidden -->
+                                        <div class="flex justify-center items-center reply-delete-modal absolute top-8 -right-13 h-12 w-20 z-10 bg-gray-50 rounded-2xl shadow-lg hidden">
+                                            <form th:action="@{'/classroom/' + ${classroom.id} + '/reply/delete'}" method="post"
+                                                  class="flex flex-col py-1">
+                                                <input type="hidden" name="replyId" th:value="${reply.id}"/>
+                                                <button onclick="event.stopPropagation(); onDeleteReply(/*[[${reply.id}]]*/)"
+                                                     class="px-6.5 py-1 hover:bg-gray-200 cursor-pointer text-center text-sm font-bold">
+                                                    삭제
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </article>
 
         </section>
@@ -185,6 +261,32 @@
     function closeNoticeModal() {
         const $joinModal = document.getElementById("noticeModal");
         $joinModal.classList.add("hidden");
+    }
+
+    // 특정 버튼(this)에서 가장 가까운 reply-card를 찾아 그 안의 모달만 연다
+    function showReplyDeleteModal(button) {
+        const card = button.closest('.reply-card');
+        if (!card) return;
+        const modal = card.querySelector('.reply-delete-modal');
+        if (!modal) return;
+        // 다른 열린 모달이 있으면 닫아주고 (선택사항)
+        document.querySelectorAll('.reply-delete-modal').forEach(m => {
+            if (m !== modal) m.classList.add('hidden');
+        });
+        modal.classList.remove('hidden');
+    }
+
+    // 전체 모달 닫기 (페이지 빈 공간 클릭 시 호출)
+    function closeReplyDeleteModal() {
+        document.querySelectorAll('.reply-delete-modal').forEach(m => m.classList.add('hidden'));
+    }
+
+    // 예시: 실제 삭제 처리 함수 (AJAX 또는 form submit으로 바꿔 사용)
+    function onDeleteReply(replyId) {
+        // 이 부분에 실제 삭제 호출 작성 (fetch/ajax 또는 폼 submit)
+        console.log('삭제할 reply id =', replyId);
+        // 호출 후 성공 시, UI에서 해당 댓글을 제거하거나 모달 닫기:
+        closeReplyDeleteModal();
     }
 </script>
 </body>
