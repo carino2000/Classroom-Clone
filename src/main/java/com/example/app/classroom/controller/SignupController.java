@@ -22,8 +22,7 @@ public class SignupController {
     final MemberMapper memberMapper;
 
     @GetMapping("/step/account")
-    public String signupStep1GetHandle(@ModelAttribute("acr") AccountCreationRequest acr,
-                                       Model model) {
+    public String signupStep1GetHandle(@ModelAttribute("acr") AccountCreationRequest acr) {
         return "signup/account";
     }
 

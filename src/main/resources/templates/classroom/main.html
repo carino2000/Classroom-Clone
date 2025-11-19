@@ -12,23 +12,7 @@
              src="/images/classroom_logo.png" alt="클래스룸 아이콘" class="underline w-40">
     </div>
     <div class="flex items-center gap-1 justify-center">
-        <button type="button" onclick="showAddModal()" class="rounded-4xl p-3 relative">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor"
-                 class="w-8 h-8 hover:scale-110 hover:bg-gray-200 rounded-4xl m-3 duration-100 size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-            </svg>
 
-            <!--여기부터 만들어보기!!-->
-            <div id="addModal" class="absolute top-15 -left-18 w-30 h-30 border z-10 hidden">
-                <div class="flex flex-col h-full">
-                    <div class="border-b flex-1"></div>
-                    <div class="border-b flex-1"></div>
-                    <div class="flex-1"></div>
-                </div>
-            </div>
-
-        </button>
         <button th:text="${session.logonMember.name.charAt(0)}"
                 type="button" class="rounded-4xl bg-emerald-700/70 text-white px-3 py-2 hover:bg-emerald-700/80">
         </button>

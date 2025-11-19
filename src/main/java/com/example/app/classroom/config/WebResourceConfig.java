@@ -13,7 +13,7 @@ public class WebResourceConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String userHome = System.getProperty("user.home");
         Path path = Paths.get(userHome, "files");
-        System.out.println(path.toUri().toString());
+        System.out.println(path.toUri().toString()); //  file:///C:/Users/USER/files/
 
         registry.addResourceHandler("/files/**").addResourceLocations(path.toUri().toString());
     }
