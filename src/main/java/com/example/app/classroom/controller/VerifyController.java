@@ -70,7 +70,6 @@ public class VerifyController {
         if (logonMember == null) {
             return "redirect:/login";
         }
-        System.out.println(code);
 
         Verification verification = verificationMapper.selectLatestByMemberId(logonMember.getId());
 
@@ -82,7 +81,6 @@ public class VerifyController {
             return "redirect:/verify/email";
         }
 
-        System.out.println("Email has been verified !");
         memberMapper.updateActiveById(logonMember.getId());
         session.setAttribute("logonMember", memberMapper.selectById(logonMember.getId()));
         return "redirect:/index";

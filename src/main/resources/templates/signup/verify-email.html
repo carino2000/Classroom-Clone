@@ -15,47 +15,156 @@
 
         </div>
         <div class="flex-1">
-            <form action="/verify/email" method="post" onsubmit="return formCheck();"
-                  class="space-y-2">
+            <form action="/verify/email" method="post" class="space-y-2">
                 <div>
-                    <input type="text" id="code" name="code" placeholder="인증코드"
-                           class="border border-stone-400 rounded px-4 py-2 w-full "/>
-                    <span class="text-sm text-red-500 hidden"> ❌ 인증코드를 입력해주세요</span>
-                    <span th:if="${isVerified != null && !isVerified}" class="text-sm text-red-500"> ❌ 인증이 실패했습니다. 다시 시도해주세요</span>
+                    <input onchange="sendEmailCheckAjax(this.value)" type="hidden" id="code" name="code"/>
+                    <div class="grid grid-cols-6 gap-2">
+                        <input id="launch-code-0" onkeydown="moveFocus(event)" type="text" inputmode="numeric"
+                               class="p-3 rounded-xl text-lg text-bold text-center border border-black/20"/>
+                        <input id="launch-code-1" onkeydown="moveFocus(event)" type="text" inputmode="numeric"
+                               class="p-3 rounded-xl text-lg text-bold text-center border border-black/20"/>
+                        <input id="launch-code-2" onkeydown="moveFocus(event)" type="text" inputmode="numeric"
+                               class="p-3 rounded-xl text-lg text-bold text-center border border-black/20"/>
+                        <input id="launch-code-3" onkeydown="moveFocus(event)" type="text" inputmode="numeric"
+                               class="p-3 rounded-xl text-lg text-bold text-center border border-black/20"/>
+                        <input id="launch-code-4" onkeydown="moveFocus(event)" type="text" inputmode="numeric"
+                               class="p-3 rounded-xl text-lg text-bold text-center border border-black/20"/>
+                        <input id="launch-code-5" onkeydown="moveFocus(event)" type="text" inputmode="numeric"
+                               class="p-3 rounded-xl text-lg text-bold text-center border border-black/20"/>
+                    </div>
+                    <span id="sendSuccess" class="text-sm text-green-600 flex mt-1 hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="size-6 text-green-600">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        인증코드 재전송 완료!
+                    </span>
+                    <span id="unauthenticated" class="text-sm text-red-500 hidden"> ❌ 인증코드가 일치하지 않습니다. 다시 시도해주세요</span>
                 </div>
                 <div class="mt-3 text-right">
-                    <button class="text-gray-700 border border-stone-400 rounded px-2 py-1 hover:bg-blue-100 duration-200 mt-1">
-                        인증</button>
+                    <button id="verifyBtn" type="submit"
+                            class="text-gray-700 border border-stone-400 rounded px-2 py-1 hover:bg-blue-100 duration-200 mt-1">
+                        인증
+                    </button>
+
                 </div>
             </form>
-            <div class="mt-20 text-right">
-                <a href="/verify/send/email" class="text-sm text-blue-400 hover:underline">인증코드 재전송</a>
+            <div class="mt-15 text-right">
+                <button id="submitBt" onclick="sendEmailAjax()" class="text-sm text-blue-400 hover:underline">인증코드 재전송
+                </button>
             </div>
         </div>
     </div>
-
-
 </div>
 
 <script>
-    function formCheck() {
-        const $code = document.getElementById("code");
+    function moveFocus(event) {
+        const el = event.target;
+        const key = event.key;
 
-        if ($code.value){
-            return true;
-        }else{
-            if(!$code.value){
-                $code.classList.remove("border-stone-400");
-                $code.classList.add("border-red-400");
-                $code.nextElementSibling.classList.remove("hidden");
-            }else{
-                $code.classList.remove("border-red-400");
-                $code.classList.add("border-stone-400");
-                $code.nextElementSibling.classList.add("hidden");
+        if (["Tab", "ArrowLeft", "ArrowRight"].includes(key)) return;
+
+        if (key === "Backspace") {
+            if (el.value) {
+                el.value = "";
+            } else if (el.previousElementSibling && el.previousElementSibling.tagName === "INPUT") {
+                el.previousElementSibling.focus();
             }
-            return false;
+            return;
         }
+
+        if (!/^[0-9]$/.test(key)) {
+            event.preventDefault();
+            return;
+        }
+
+        event.preventDefault();
+        el.value = key;
+
+        // 다음 input으로 이동하고, 모든 칸이 채워지면 합쳐서 검사 호출
+        setTimeout(function () {
+            if (el.nextElementSibling && el.nextElementSibling.tagName === "INPUT") {
+                el.nextElementSibling.focus();
+            }
+
+            // 6개 코드 값을 읽어서 모두 채워졌는지 확인
+            const codes = [];
+            for (let i = 0; i < 6; i++) {
+                const inp = document.getElementById("launch-code-" + i);
+                codes.push(inp ? inp.value.trim() : "");
+            }
+            const complete = codes.every(v => v !== "");
+
+            if (complete) {
+                const fullCode = codes.join('');
+                // hidden input에 값 넣기 (폼 제출 시 서버로 전송되게)
+                const hidden = document.getElementById("code");
+                if (hidden) hidden.value = fullCode;
+
+                // 인증 체크 AJAX 호출 (한 번만)
+                sendEmailCheckAjax(fullCode);
+            }
+        }, 0);
+        document.getElementById("submitBt").disabled = false;
     }
+
+
+
+    function sendEmailCheckAjax(code) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("get", "/ajax/check/email?code=" + encodeURIComponent(code));
+
+        xhr.onloadend = function () {
+            // 인증 실패
+            if (xhr.responseText === "unAuth") {
+                // 재전송 버튼은 비활성 유지(필요하면 조정)
+                document.getElementById("submitBt").disabled = true;
+                // 실제 인증(verify) 버튼 비활성화
+                const verifyBtn = document.getElementById("verifyBtn");
+                if (verifyBtn) verifyBtn.disabled = true;
+
+                document.getElementById("code").classList.remove("border-stone-400");
+                document.getElementById("code").classList.add("border-red-400");
+                document.getElementById("unauthenticated").classList.remove("hidden");
+            }
+            // 인증 성공
+            else if (xhr.responseText === "auth") {
+                // 재전송 버튼 활성화(선택)
+                document.getElementById("submitBt").disabled = false;
+                // 실제 인증(verify) 버튼 활성화
+                const verifyBtn = document.getElementById("verifyBtn");
+                if (verifyBtn) verifyBtn.disabled = false;
+
+                document.getElementById("code").classList.remove("border-red-400");
+                document.getElementById("code").classList.add("border-stone-400");
+                document.getElementById("unauthenticated").classList.add("hidden");
+            }
+        }
+        xhr.send();
+    }
+
+
+    function sendEmailAjax() {
+        const xhr = new XMLHttpRequest();
+        xhr.open("post", "/ajax/send/email");
+        xhr.onloadend = function () {
+            if (xhr.responseText === "success") {
+                document.getElementById("sendSuccess").classList.remove("hidden");
+                document.getElementById("submitBt").disabled = false;
+                document.getElementById("submitBt").classList.add("cursor-pointer");
+                document.getElementById("submitBt").classList.remove("cursor-wait");
+                document.getElementById("submitBt").classList.remove("animate-bounce");
+            }
+        }
+        xhr.send();
+        document.getElementById("submitBt").disabled = true;
+        document.getElementById("submitBt").classList.remove("cursor-pointer");
+        document.getElementById("submitBt").classList.add("cursor-wait");
+        document.getElementById("submitBt").classList.add("animate-bounce");
+    }
+
+
 </script>
 </body>
 </html>

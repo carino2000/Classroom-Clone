@@ -104,6 +104,20 @@ public class ClassroomController {
             noticeWithAttachments.add(nwa);
         }
 
+        if (!logonMember.getId().equals(found.getTeacherId())) {
+            Map<String, String> map = Map.of("studentId", logonMember.getId(), "classroomId", classroomId);
+            ClassMember classMember = classMemberMapper.selectByStudentAndClassId(map);
+            boolean exist = classMemberMapper.existTodayCheckByClassMemberId(classMember.getId());
+
+            if (exist) {
+                model.addAttribute("already", true);
+            }else{
+                model.addAttribute("already", false);
+            }
+        }else{
+            model.addAttribute("already", false);
+        }
+
         model.addAttribute("classroom", found);
         model.addAttribute("noticeList", noticeWithAttachments);
         model.addAttribute("logonMember", logonMember);

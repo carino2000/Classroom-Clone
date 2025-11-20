@@ -1,6 +1,7 @@
 package com.example.app.classroom.mapper;
 
 import com.example.app.classroom.domain.ClassMember;
+import com.example.app.classroom.domain.DailyCheck;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,6 +11,13 @@ import java.util.Map;
 public interface ClassMemberMapper {
     int insertOne(ClassMember classMember);
 
-    ClassMember selectByStudentAndClassId(Map<String,String> map);
+    ClassMember selectByStudentAndClassId(Map<String, String> map);
+
     List<String> selectStudentIdByClassroomId(String classroomId);
+
+
+    // daily_check 쪽
+    int insertDailyCheck(DailyCheck dailyCheck);
+
+    boolean existTodayCheckByClassMemberId(int classMemberId);
 }

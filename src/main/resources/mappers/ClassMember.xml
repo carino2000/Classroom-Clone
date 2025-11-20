@@ -10,12 +10,26 @@
     </insert>
 
     <select id="selectByStudentAndClassId" parameterType="map" resultType="ClassMember">
-        select * from class_member where student_id=#{studentId} and classroom_id=#{classroomId};
+        select * from class_member where student_id=#{studentId} and classroom_id=#{classroomId}
     </select>
     <select id="selectStudentIdByClassroomId" resultType="string" parameterType="string">
         select student_id from class_member where classroom_id=#{classroomId}
     </select>
 
+
+    <!--daily_check 쪽-->
+
+    <insert id="insertDailyCheck" parameterType="DailyCheck">
+        insert into daily_check (class_member_id, checked_at)
+        values(#{classMemberId}, #{checkedAt})
+    </insert>
+
+
+
+    <select id="existTodayCheckByClassMemberId" parameterType="int" resultType="boolean">
+        select count(*) = 1 as flag from daily_check where class_member_id=#{classMemberId}
+        and checked_at=current_date()
+    </select>
 
 
 </mapper>

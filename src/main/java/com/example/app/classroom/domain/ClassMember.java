@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClassMember {
-    String id;
+    int id;
     String studentId;
     String classroomId;
     String blocked;
